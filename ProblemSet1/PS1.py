@@ -53,10 +53,8 @@ def zeroes(i,j):
 
 #sum all values in a matrix
 def sumMatrix(matrix):
-    mySum = 0
-    for row in matrix:
-        mySum += sum(row)
-    return mySum
+    matrix = np.array(matrix)
+    return matrix.sum()
 
 #####################################
 
@@ -73,18 +71,16 @@ def sense(p,Z):
     qMatrix = zeroes(len(p), len(p[0]))
     print qMatrix
     for i in range(len(p)): #len(p) is the # of rows
-            q=[]
-            myRow = colors[i]  #get the appropriate row of colors
-            for j in range(len(myRow)):
-                hitRed = (Z == myRow[j])
-                if hitRed:
-                    q.append(p[i][j]*pRed*sensor_right + p[i][j]*pGreen*(1-sensor_right))
-                else:
-                    q.append(p[i][j]*pGreen*sensor_right + p[i][j]*pRed*(1-sensor_right))
-                #q.append(p[i][j] * (hit * pRed + (1-hit) * pGreen))
-            qMatrix[i] = q
-            print qMatrix
-        #s = sum(q)
+        q=[]
+        myRow = colors[i]  #get the appropriate row of colors
+        for j in range(len(myRow)):
+            hitRed = (Z == myRow[j])
+            if hitRed:
+                q.append(p[i][j]*pRed*sensor_right + p[i][j]*pGreen*(1-sensor_right))
+            else:
+                q.append(p[i][j]*pGreen*sensor_right + p[i][j]*pRed*(1-sensor_right))
+        qMatrix[i] = q
+        print qMatrix
     sum_q = sumMatrix(qMatrix)
     for a in range(len(qMatrix)):
         for b in range(len(qMatrix[0])):
@@ -102,25 +98,32 @@ def move (p,Z):
     p_old = copy.deepcopy(p)
 
 
-# create formula for horizontal movement; assumes movement is never more than 1
+    # create formula for horizontal movement; assumes movement is never more than 1
     horizMovement = Z[1]
     if horizMovement != 0:
         p = np.roll(p,horizMovement, 1)
 
-# create formula for vertical movement
+    # create formula for vertical movement
     vertMovement = Z[0]
-    if vertMovement !=0:
+    if vertMovement != 0:
         p = np.roll(p,vertMovement, 0)
 
-    qmatrix = p_move*p + (1-p_move)*p_old
+    qmatrix = p_move*p + (1-p_move)*p_old #factor in the probability that we fail to move
+
+#qmatrix = qmatrix/qmatrix.sum()
 
     return qmatrix
 
 #Your probability array must be printed
 #with the following code.
 
-p = move(p, [0,1])
-p = sense(p,'green')
+#test cases
+#p = move(p, [0,1])
+#p = sense(p,'green')
+
+for k in range(len(measurements)):
+    p = move(p, motions[k])
+    p = sense(p, measurements[k])
 
 
 show(p)
