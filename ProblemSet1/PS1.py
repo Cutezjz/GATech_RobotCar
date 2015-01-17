@@ -27,6 +27,7 @@ def show(p):
 #Enter your code here:
 
 import numpy as np
+import copy
 
 #Helper Functions because for some bloody reason they won't let us use effing Numpy
 
@@ -62,6 +63,8 @@ def sumMatrix(matrix):
 pRed = 15./20
 pGreen = 5./20
 
+#numpyColors = np.array(colors) #create a numpy version of the colors
+
 #TODO: Build the sense function
 
 # p = 4x5 matrix of probabilities
@@ -88,15 +91,36 @@ def sense(p,Z):
             qMatrix[a][b] = qMatrix[a][b] / sum_q
     return qMatrix
 
-p = sense(p,'green')
-
 
 #TODO: Build movement system which rolls the rows and columns correctly
 
+# Z is the movement array, p is the probability matrix
+def move (p,Z):
+    qmatrix = np.zeros(shape=(len(p), len(p[0])))
+    p = np.array(p) # convert arrays to Numpy
+    #Z = np.array(Z)
+    p_old = copy.deepcopy(p)
 
 
+# create formula for horizontal movement; assumes movement is never more than 1
+    horizMovement = Z[1]
+    if horizMovement != 0:
+        p = np.roll(p,horizMovement, 1)
+
+# create formula for vertical movement
+    vertMovement = Z[0]
+    if vertMovement !=0:
+        p = np.roll(p,vertMovement, 0)
+
+    qmatrix = p_move*p + (1-p_move)*p_old
+
+    return qmatrix
 
 #Your probability array must be printed
 #with the following code.
+
+p = move(p, [0,1])
+p = sense(p,'green')
+
 
 show(p)
