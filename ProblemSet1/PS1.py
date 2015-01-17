@@ -26,6 +26,8 @@ def show(p):
 
 #Enter your code here:
 
+import numpy as np
+
 #Helper Functions because for some bloody reason they won't let us use effing Numpy
 
 def getColumn(matrix, i):
@@ -73,9 +75,9 @@ def sense(p,Z):
             for j in range(len(myRow)):
                 hitRed = (Z == myRow[j])
                 if hitRed:
-                    q.append(p[i][j]*pRed)
+                    q.append(p[i][j]*pRed*sensor_right + p[i][j]*pGreen*(1-sensor_right))
                 else:
-                    q.append(p[i][j]*pGreen)
+                    q.append(p[i][j]*pGreen*sensor_right + p[i][j]*pRed*(1-sensor_right))
                 #q.append(p[i][j] * (hit * pRed + (1-hit) * pGreen))
             qMatrix[i] = q
             print qMatrix
