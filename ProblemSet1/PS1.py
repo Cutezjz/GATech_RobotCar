@@ -28,7 +28,6 @@ def show(p):
 #Enter your code here:
 
 import numpy as np
-import copy
 
 #Helper Functions because for some bloody reason they won't let us use effing Numpy
 
@@ -95,8 +94,9 @@ def move (p,Z):
     qmatrix = np.zeros(shape=(len(p), len(p[0])))
     p = np.array(p) # convert arrays to Numpy
     #Z = np.array(Z)
-    p_old = copy.deepcopy(p)
+    #p_old = copy.deepcopy(p)
 
+    qmatrix = (1-p_move)*p #create a probability matrix for a failure to move event, based on current p
     # create formula for horizontal movement; assumes movement is never more than 1
     horizMovement = Z[1]
     if horizMovement != 0:
@@ -107,7 +107,7 @@ def move (p,Z):
     if vertMovement != 0:
         p = np.roll(p,vertMovement, 0)
 
-    qmatrix = p_move*p + (1-p_move)*p_old #factor in the probability that we fail to move
+    qmatrix += p_move*p # + (1-p_move)*p_old #factor in the probability that we fail to move
     qmatrix = qmatrix/qmatrix.sum()
 
 #qmatrix = qmatrix/qmatrix.sum()
