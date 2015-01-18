@@ -11,9 +11,9 @@ p = [[1./20, 1./20, 1./20, 1./20, 1./20],
      [1./20, 1./20, 1./20, 1./20, 1./20]]
 
 motions = [[0,0],[0,1],[1,0],[1,0],[0,1]]
-#motions = [[0,0],[0,0],[0,0],[0,0],[0,0]]
 
-sensor_right = 0.7 #same as pHit
+sensor_right = 0.7
+
 p_move = 0.8
 
 def show(p):
@@ -59,8 +59,6 @@ def sumMatrix(matrix):
 
 #####################################
 
-pRed = 15./20
-pGreen = 5./20
 pHit = sensor_right
 
 #numpyColors = np.array(colors) #create a numpy version of the colors
@@ -87,7 +85,6 @@ def sense(p,Z):
     qMatrix = np.array(qMatrix)
     qMatrix = qMatrix/sum_q
 
-    print "the sum of qMatrix is %s" % qMatrix.sum()
     return qMatrix
 
 
@@ -128,5 +125,6 @@ for k in range(len(measurements)):
     p = move(p, motions[k])
     p = sense(p, measurements[k])
 
+p = p.tolist()
 
 show(p)
