@@ -11,8 +11,9 @@ p = [[1./20, 1./20, 1./20, 1./20, 1./20],
      [1./20, 1./20, 1./20, 1./20, 1./20]]
 
 motions = [[0,0],[0,1],[1,0],[1,0],[0,1]]
+#motions = [[0,0],[0,0],[0,0],[0,0],[0,0]]
 
-sensor_right = 0.7
+sensor_right = 0.7 #same as pHit
 p_move = 0.8
 
 def show(p):
@@ -60,6 +61,7 @@ def sumMatrix(matrix):
 
 pRed = 15./20
 pGreen = 5./20
+pHit = sensor_right
 
 #numpyColors = np.array(colors) #create a numpy version of the colors
 
@@ -69,22 +71,23 @@ pGreen = 5./20
 # Z = Measurement color (singular; not an array)
 def sense(p,Z):
     qMatrix = zeroes(len(p), len(p[0]))
-    print qMatrix
     for i in range(len(p)): #len(p) is the # of rows
         q=[]
         myRow = colors[i]  #get the appropriate row of colors
         for j in range(len(myRow)):
-            hitRed = (Z == myRow[j])
-            if hitRed:
-                q.append(p[i][j]*pRed*sensor_right + p[i][j]*pGreen*(1-sensor_right))
-            else:
-                q.append(p[i][j]*pGreen*sensor_right + p[i][j]*pRed*(1-sensor_right))
-        qMatrix[i] = q
-        print qMatrix
+            hit = (Z == myRow[j])
+            q.append(p[i][j] * (hit * pHit + (1-hit) * (1-pHit)))
+                # if Z == 'red':
+                #     q.append(p[i][j]*pRed*sensor_right + p[i][j]*pGreen*(1-sensor_right))
+                # else:
+                #     q.append(p[i][j]*pGreen*sensor_right + p[i][j]*pRed*(1-sensor_right))
+
+            qMatrix[i] = q
     sum_q = sumMatrix(qMatrix)
-    for a in range(len(qMatrix)):
-        for b in range(len(qMatrix[0])):
-            qMatrix[a][b] = qMatrix[a][b] / sum_q
+    qMatrix = np.array(qMatrix)
+    qMatrix = qMatrix/sum_q
+
+    print "the sum of qMatrix is %s" % qMatrix.sum()
     return qMatrix
 
 
@@ -97,7 +100,6 @@ def move (p,Z):
     #Z = np.array(Z)
     p_old = copy.deepcopy(p)
 
-
     # create formula for horizontal movement; assumes movement is never more than 1
     horizMovement = Z[1]
     if horizMovement != 0:
@@ -109,6 +111,7 @@ def move (p,Z):
         p = np.roll(p,vertMovement, 0)
 
     qmatrix = p_move*p + (1-p_move)*p_old #factor in the probability that we fail to move
+    qmatrix = qmatrix/qmatrix.sum()
 
 #qmatrix = qmatrix/qmatrix.sum()
 
