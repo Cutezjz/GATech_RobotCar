@@ -95,39 +95,45 @@ class robot:
 
     def move(self, motion): # Do not change the name of this function
 
+        new_robot = robot()
+        new_robot.length = self.length
+        new_robot.bearing_noise = self.bearing_noise
+        new_robot.steering_noise = self.steering_noise
+        new_robot.distance_noise = self.distance_noise
+
         tolerance = 0.001
 
         alpha = motion[0]
         d = motion[1]
 
-        beta = d/self.length*tan(alpha)
+        beta = d/new_robot.length*tan(alpha)
 
         if beta < tolerance:
             beta = 0
             turning_radius = d
         else:
-            beta = d/self.length*tan(alpha)
+            beta = d/new_robot.length*tan(alpha)
             turning_radius = d/beta
 
-        cx = self.x - sin(self.orientation)*turning_radius
-        cy = self.y + cos(self.orientation)*turning_radius
+        cx = new_robot.x - sin(new_robot.orientation)*turning_radius
+        cy = new_robot.y + cos(new_robot.orientation)*turning_radius
 
         if beta == 0:
-            x_prime = self.x + d*cos(self.orientation)
-            y_prime = self.y + d*sin(self.orientation)
+            x_prime = new_robot.x + d*cos(new_robot.orientation)
+            y_prime = new_robot.y + d*sin(new_robot.orientation)
         else:
-            x_prime = cx + sin(self.orientation + beta)*turning_radius
-            y_prime = cy - cos(self.orientation + beta)*turning_radius
+            x_prime = cx + sin(new_robot.orientation + beta)*turning_radius
+            y_prime = cy - cos(new_robot.orientation + beta)*turning_radius
 
-        orientation_prime = (self.orientation + beta) % (2*pi)
+        orientation_prime = (new_robot.orientation + beta) % (2*pi)
 
         # ADD CODE HERE
 
-        self.x = x_prime
-        self.y = y_prime
-        self.orientation = orientation_prime
+        new_robot.x = x_prime
+        new_robot.y = y_prime
+        new_robot.orientation = orientation_prime
 
-        result = self
+        result = new_robot
 
         return result # make sure your move function returns an instance
                       # of the robot class with the correct coordinates.
