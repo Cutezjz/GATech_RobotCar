@@ -94,7 +94,7 @@ class robot:
     #   obtains bearings from positions
     #
 
-    def sense(self): #do not change the name of this function
+    def sense(self, add_noise = 1): #do not change the name of this function
         Z = []
 
         #clone the robot
@@ -111,10 +111,12 @@ class robot:
             y_landmark = landmarks[i][0]
             x_landmark = landmarks[i][1]
 
-            if (y_landmark >= myrobot2.y): #if it is above me
-                bearing = atan2(y_landmark-myrobot2.y, x_landmark-myrobot2.x) - myrobot2.orientation
-            elif (y_landmark < myrobot2.y): #if it is below me
-                bearing = 2*pi + atan2(y_landmark-myrobot2.y, x_landmark-myrobot2.x)-myrobot2.orientation
+
+            bearing = atan2(y_landmark-myrobot2.y, x_landmark-myrobot2.x) - myrobot2.orientation
+
+            if add_noise:
+                bearing += random.gauss(0.0, self.bearing_noise)
+            bearing %= 2*pi
             Z.append(bearing)
 
         return Z #Leave this line here. Return vector Z of 4 bearings.
@@ -159,18 +161,18 @@ print 'Measurements: ', myrobot.sense()
 ## 2) The following code should print the list [5.376567117456516, 3.101276726419402, 1.3012484663475101, 0.22364779645531352]
 ##
 ##
-##length = 20.
-##bearing_noise  = 0.0
-##steering_noise = 0.0
-##distance_noise = 0.0
-##
-##myrobot = robot(length)
-##myrobot.set(30.0, 20.0, pi / 5.0)
-##myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
-##
-##print 'Robot:        ', myrobot
-##print 'Measurements: ', myrobot.sense()
-##
+length = 20.
+bearing_noise  = 0.0
+steering_noise = 0.0
+distance_noise = 0.0
+
+myrobot = robot(length)
+myrobot.set(30.0, 20.0, pi / 5.0)
+myrobot.set_noise(bearing_noise, steering_noise, distance_noise)
+
+print 'Robot:        ', myrobot
+print 'Measurements: ', myrobot.sense()
+
 
 
 ## IMPORTANT: You may uncomment the test cases below to test your code.
