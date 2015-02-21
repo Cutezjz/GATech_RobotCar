@@ -13,11 +13,11 @@
 # the function should return the string 'fail'
 # ----------
 
-grid = [[0, 1, 0, 1, 0, 0],
-        [0, 1, 0, 1, 0, 0],
-        [0, 1, 0, 1, 0, 0],
-        [0, 1, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0, 0,]]
+grid = [[0, 1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0]]
 heuristic = [[9, 8, 7, 6, 5, 4],
              [8, 7, 6, 5, 4, 3],
              [7, 6, 5, 4, 3, 2],
@@ -49,8 +49,9 @@ def search(grid,init,goal,cost,heuristic):
     y = init[1]
     g = 0
     spot_heuristic = heuristic[x][y]
+    f = spot_heuristic + g
 
-    open = [[g, x, y, spot_heuristic]]
+    open = [[f, g, x, y, spot_heuristic]]
 
 
     found = False  # flag that is set when search is complete
@@ -65,9 +66,9 @@ def search(grid,init,goal,cost,heuristic):
             open.sort()
             open.reverse()
             next = open.pop()
-            x = next[1]
-            y = next[2]
-            g = next[0]
+            x = next[2]
+            y = next[3]
+            g = next[1]
             spot_heuristic = heuristic[x][y]
             expand[x][y] = count
             count += 1
@@ -83,22 +84,9 @@ def search(grid,init,goal,cost,heuristic):
                     if x2 >= 0 and x2 < len(grid) and y2 >=0 and y2 < len(grid[0]):
                         if closed[x2][y2] == 0 and grid[x2][y2] == 0:
                             g2 = g + cost
-                            open_queue.append([g2, x2, y2, heuristic[x2][y2]])
-
-                open_queue.sort(key=lambda x: x[3]) #sort by heuristic
-                open_queue.reverse()
-
-                if len(open_queue) == 0:
-                    resign = True
-                    return "Fail"
-                else:
-                    next_open = open_queue.pop()
-                    open.append(next_open)
-
-                    x2 = next_open[1]
-                    y2 = next_open[2]
-
-                    closed[x2][y2] = 1
+                            f = g2 + heuristic[x2][y2]
+                            open.append([f, g2, x2, y2, heuristic[x2][y2]])
+                            closed[x2][y2] = 1
 
     return expand
 
