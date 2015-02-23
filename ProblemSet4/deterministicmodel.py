@@ -23,6 +23,8 @@
 # is sufficiently close to the correct answer
 # (within 0.001), you will be marked as correct.
 
+import math
+
 delta = [[-1, 0 ], # go up
          [ 0, -1], # go left
          [ 1, 0 ], # go down
@@ -34,8 +36,24 @@ delta_name = ['^', '<', 'v', '>'] # Use these when creating your policy grid.
 #  Modify the function stochastic_value below
 # ---------------------------------------------
 
+# def calculate_costs(value_grid, target, left, right, success_prob):
+#
+#     target_x = target[0]
+#     target_y = target[1]
+#     target_value = value_grid[target_x][target_y]
+#     print type(target_value)
+#     value_state = success_prob*target_value
+#     cells_to_check = [left, right] # create an array of the cells I want to check, which are left and right
+#
+#     for square in cells_to_check:
+#         if square[0] >= 0 and square[0] < len(grid) and square[1] >=0 and square[1] < len(grid[0]):
+#             value_state += (1-success_prob)*value_grid[square[0]][square[1]]
+#         else:
+#             value_state += (1-success_prob)*100 # it is a brick wall, so value state is 100
+#
+#     return value_state
 
-def solve_at_coordinate(grid, init, goal, cost):
+def solve_at_coordinate(value, grid, init, goal, cost, failure_prob):
     closed = [[0 for row in range(len(grid[0]))] for col in range(len(grid))]
     closed[init[0]][init[1]] = 1
 
@@ -51,7 +69,7 @@ def solve_at_coordinate(grid, init, goal, cost):
     while not found and not resign:
         if len(open) == 0:
             resign = True
-            return 1000
+            break
         else:
             open.sort()
             open.reverse()
@@ -68,10 +86,35 @@ def solve_at_coordinate(grid, init, goal, cost):
                     y2 = y + delta[i][1]
                     if x2 >= 0 and x2 < len(grid) and y2 >=0 and y2 < len(grid[0]):
                         if closed[x2][y2] == 0 and grid[x2][y2] == 0:
+
                             g2 = g + cost
+
+                            if i == 0: #for the up direction
+                                left_x = x + delta[1][0]
+                                left_y = y + delta[1][1]
+                                right_x = x + delta[3][0]
+                                right_y = y + delta[3][0]
+                            elif i == 1: #for the left direction
+                                left_x = x + delta[2][0]
+                                left_y = y + delta[2][1]
+                                right_x = x + delta[0][0]
+                                right_y = y + delta[0][0]
+                            elif i == 2: #for the down direction
+                                left_x = x + delta[3][0]
+                                left_y = y + delta[3][1]
+                                right_x = x + delta[1][0]
+                                right_y = y + delta[1][0]
+                            elif i == 3: #for the right direction
+                                left_x = x + delta[0][0]
+                                left_y = y + delta[0][1]
+                                right_x = x + delta[2][0]
+                                right_y = y + delta[2][0]
+
+                            #calculate the value at that spot 
+
                             open.append([g2, x2, y2])
                             closed[x2][y2] = 1
-    return next[0] #this is the g value of the final
+    return next[0] # next[0] # this is the g value of the final
 
 def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
     failure_prob = (1.0 - success_prob)/2.0 # Probability(stepping left) = prob(stepping right) = failure_prob
@@ -84,7 +127,7 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
             if grid[i][j] == 1:
                 value[i][j] = 1000
             else:
-                value[i][j] = solve_at_coordinate(grid, [i, j], goal, cost_step)
+                value[i][j] = solve_at_coordinate(value, grid, [i, j], goal, cost_step, failure_prob)
 
     policy = []
     return value, policy
