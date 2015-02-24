@@ -65,22 +65,22 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
                                 left_x = x + delta[1][0]
                                 left_y = y + delta[1][1]
                                 right_x = x + delta[3][0]
-                                right_y = y + delta[3][0]
+                                right_y = y + delta[3][1]
                             elif a == 1: #for the left direction
                                 left_x = x + delta[2][0]
                                 left_y = y + delta[2][1]
                                 right_x = x + delta[0][0]
-                                right_y = y + delta[0][0]
+                                right_y = y + delta[0][1]
                             elif a == 2: #for the down direction
                                 left_x = x + delta[3][0]
                                 left_y = y + delta[3][1]
                                 right_x = x + delta[1][0]
-                                right_y = y + delta[1][0]
+                                right_y = y + delta[1][1]
                             elif a == 3: #for the right direction
                                 left_x = x + delta[0][0]
                                 left_y = y + delta[0][1]
                                 right_x = x + delta[2][0]
-                                right_y = y + delta[2][0]
+                                right_y = y + delta[2][1]
 
                             my_neighbors = [[left_x,left_y], [right_x, right_y]]
 
@@ -105,6 +105,9 @@ def stochastic_value(grid,goal,cost_step,collision_cost,success_prob):
 # ---------------------------------------------
 #  Use the code below to test your solution
 # ---------------------------------------------
+
+# grid = [[0,0,0],
+#         [0,0,0]]
 
 grid = [[0, 0, 0, 0],
         [0, 0, 0, 0],
