@@ -61,10 +61,16 @@ def solve_at_coordinate(value, grid, init, goal, cost, failure_prob):
     y = init[1]
     g = 0
 
+
     open = [[g, x, y]]
 
     found = False  # flag that is set when search is complete
     resign = False # flag set if we can't find expand
+
+    left_x = 0
+    left_y = 0
+    right_x = 0
+    right_y = 0
 
     while not found and not resign:
         if len(open) == 0:
@@ -110,7 +116,15 @@ def solve_at_coordinate(value, grid, init, goal, cost, failure_prob):
                                 right_x = x + delta[2][0]
                                 right_y = y + delta[2][0]
 
-                            #calculate the value at that spot 
+                            my_neighbors = [[left_x,left_y], [right_x, right_y]]
+
+                            for square in range(len(my_neighbors)):
+                                if square[0] >= 0 and square[0] < len(grid) and square[1] >=0 and square[1] < len(grid[0]):
+                                    #calculate the value at that spot w/1000
+                                else:
+                                    #calculate value like normal
+
+                            #g2 = new cost
 
                             open.append([g2, x2, y2])
                             closed[x2][y2] = 1
