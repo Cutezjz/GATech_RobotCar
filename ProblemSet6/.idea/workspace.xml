@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hw1omega.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="hw1omega.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw1omega.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7340287" vertical-offset="5472" max-vertical-offset="6358">
-              <caret line="355" column="131" selection-start-line="355" selection-start-column="131" selection-end-line="355" selection-end-column="131" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="5722" max-vertical-offset="6358">
+              <caret line="360" column="29" selection-start-line="360" selection-start-column="4" selection-end-line="360" selection-end-column="29" />
               <folding>
                 <element signature="e#342#360#0" expanded="true" />
               </folding>
@@ -48,11 +48,33 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="2Domega.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/2Domega.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.4278524" vertical-offset="10369" max-vertical-offset="13923">
+              <caret line="660" column="4" selection-start-line="660" selection-start-column="4" selection-end-line="660" selection-end-column="4" />
+              <folding>
+                <element signature="e#1350#1368#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sillytests.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sillytests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+              <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="expandomega.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/expandomega.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.74074" vertical-offset="5461" max-vertical-offset="6885">
-              <caret line="351" column="13" selection-start-line="351" selection-start-column="13" selection-end-line="351" selection-end-column="13" />
+            <state vertical-scroll-proportion="7.0740743" vertical-offset="6192" max-vertical-offset="6885">
+              <caret line="353" column="0" selection-start-line="353" selection-start-column="0" selection-end-line="354" selection-end-column="37" />
               <folding>
                 <element signature="e#388#406#0" expanded="true" />
               </folding>
@@ -68,14 +90,16 @@
         <option value="$PROJECT_DIR$/omega.py" />
         <option value="$PROJECT_DIR$/expandomega.py" />
         <option value="$PROJECT_DIR$/hw1omega.py" />
+        <option value="$PROJECT_DIR$/sillytests.py" />
+        <option value="$PROJECT_DIR$/2Domega.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="21" />
-    <option name="y" value="22" />
-    <option name="width" value="1558" />
-    <option name="height" value="1113" />
+    <option name="x" value="-25" />
+    <option name="y" value="38" />
+    <option name="width" value="1581" />
+    <option name="height" value="1115" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -132,7 +156,7 @@
       <console-settings />
     </option>
   </component>
-  <component name="RunManager" selected="Python.hw1omega">
+  <component name="RunManager" selected="Python.2Domega">
     <configuration default="false" name="omega" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -187,6 +211,46 @@
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="sillytests" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ProblemSet6" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sillytests.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="2Domega" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ProblemSet6" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/2Domega.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PyDebugRunner" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PyDebugRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -312,20 +376,27 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.omega" />
       <item index="1" class="java.lang.String" itemvalue="Python.expandomega" />
       <item index="2" class="java.lang.String" itemvalue="Python.hw1omega" />
+      <item index="3" class="java.lang.String" itemvalue="Python.sillytests" />
+      <item index="4" class="java.lang.String" itemvalue="Python.2Domega" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.hw1omega" />
-        <item index="1" class="java.lang.String" itemvalue="Python.expandomega" />
-        <item index="2" class="java.lang.String" itemvalue="Python.omega" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Python.2Domega" />
+        <item index="1" class="java.lang.String" itemvalue="Python.sillytests" />
+        <item index="2" class="java.lang.String" itemvalue="Python.hw1omega" />
+        <item index="3" class="java.lang.String" itemvalue="Python.expandomega" />
+        <item index="4" class="java.lang.String" itemvalue="Python.omega" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="81b253a9-cf51-41ec-8f51-f117fb7efebf" name="Default" comment="" />
@@ -336,7 +407,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="21" y="22" width="1558" height="1113" extended-state="0" />
+    <frame x="-25" y="38" width="1581" height="1115" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -344,10 +415,10 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2605905" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2567995" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39961758" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23850575" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36520076" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -391,10 +462,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sillytests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/expandomega.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.74074" vertical-offset="5461" max-vertical-offset="6885">
-          <caret line="351" column="13" selection-start-line="351" selection-start-column="13" selection-end-line="351" selection-end-column="13" />
+        <state vertical-scroll-proportion="7.0740743" vertical-offset="6192" max-vertical-offset="6885">
+          <caret line="353" column="0" selection-start-line="353" selection-start-column="0" selection-end-line="354" selection-end-column="37" />
           <folding>
             <element signature="e#388#406#0" expanded="true" />
           </folding>
@@ -403,10 +482,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hw1omega.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7340287" vertical-offset="5472" max-vertical-offset="6358">
-          <caret line="355" column="131" selection-start-line="355" selection-start-column="131" selection-end-line="355" selection-end-column="131" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="5722" max-vertical-offset="6358">
+          <caret line="360" column="29" selection-start-line="360" selection-start-column="4" selection-end-line="360" selection-end-column="29" />
           <folding>
             <element signature="e#342#360#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/2Domega.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4278524" vertical-offset="10369" max-vertical-offset="13923">
+          <caret line="660" column="4" selection-start-line="660" selection-start-column="4" selection-end-line="660" selection-end-column="4" />
+          <folding>
+            <element signature="e#1350#1368#0" expanded="true" />
           </folding>
         </state>
       </provider>
