@@ -552,6 +552,8 @@ def slam(data, N, num_landmarks, motion_noise, measurement_noise):
     # compute best estimate
     mu = Omega.inverse() * Xi
 
+    # print mu
+
     # return the result
     return mu
 
@@ -575,12 +577,12 @@ def online_slam(data, N, num_landmarks, motion_noise, measurement_noise):
     # Enter your code here!
     #
     # Set the dimension of the filter
-    dim = 2 * (N + num_landmarks)
+    dim = 2 * (1 + num_landmarks)
 
     # make the constraint information matrix and vector
     Omega = matrix()
-    print "dim is:"
-    print dim
+    # print "dim is:"
+    # print dim
     Omega.zero(dim, dim)
     Omega.value[0][0] = 1.0
     Omega.value[1][1] = 1.0
@@ -592,73 +594,103 @@ def online_slam(data, N, num_landmarks, motion_noise, measurement_noise):
 
     # process the data
 
-    for k in range(len(data)):
+    there_is_data = True
+
+    while there_is_data:
+
+        # #I am gonna hack
+        # for k in range(2):
 
         # n is the index of the robot pose in the matrix/vector
-        n = 1*2 #fixing this value at "2" for this hipster method
+        #n = 2 #fixing this value at "2" for this hipster method
 
-        measurement = data[k][0]
-        motion      = data[k][1]
+
+        # print "this is k"
+        # print k
+        # print len(data)
+        # try:
+        #     print data[k]
+        #     measurement = data[k][0]
+        #     motion      = data[k][1]
+        # except IndexError:
+        #     print "craps"
+        #     break
+
+        #it will always be the first item
+        measurement = data[0][0]
+        motion = data[0][1]
 
         expansion_array = range(0,Omega.dimx + 2) # this will help us insert 2 rows of 0s
         del expansion_array[2:4] #these are the new x, y's we don't want to have values attached.
 
         Omega = Omega.expand(Omega.dimx + 2, Omega.dimy + 2,expansion_array, expansion_array)
+        # print Omega
 
-        print expansion_array
-        print Xi.dimx+2
+        # print expansion_array
+        # print Xi.dimx+2
         Xi = Xi.expand(Xi.dimx+2, 1, expansion_array,[0])
+        # print "Xi dimensions + 2, Xi dimensions"
+        # print Xi.dimx + 2
+        # print Xi
 
-        print "Expanded Omega dimensions X, Y"
-        print Omega.dimx
-        print Omega.dimy
+        # print "Expanded Omega dimensions X, Y"
+        # print Omega.dimx
+        # print Omega.dimy
 
         # integrate the measurements
-        for i in range(len(measurement)):
+        for n in range(0,2):
 
+            for i in range(len(measurement)):
 
+                # print measurement
+                # m is the index of the landmark coordinate in the matrix/vector
+                m = 2 * (2 + measurement[i][0]) #changed N to 2 due to expansion
 
-            # m is the index of the landmark coordinate in the matrix/vector
-            m = 2 * (1 + measurement[i][0]) #changed N to 1 due to expansion
+                # update the information maxtrix/vector based on the measurement
+                for b in range(2):
+                    Omega.value[n+b][n+b] +=  1.0 / measurement_noise
+                    Omega.value[m+b][m+b] +=  1.0 / measurement_noise
+                    Omega.value[n+b][m+b] += -1.0 / measurement_noise
+                    Omega.value[m+b][n+b] += -1.0 / measurement_noise
+                    Xi.value[n+b][0]      += -measurement[i][1+b] / measurement_noise
+                    Xi.value[m+b][0]      +=  measurement[i][1+b] / measurement_noise
 
-            # update the information maxtrix/vector based on the measurement
+            # update the information maxtrix/vector based on the robot motion
+            for b in range(4):
+                Omega.value[n+b][n+b] +=  1.0 / motion_noise
             for b in range(2):
-                Omega.value[n+b][n+b] +=  1.0 / measurement_noise
-                Omega.value[m+b][m+b] +=  1.0 / measurement_noise
-                Omega.value[n+b][m+b] += -1.0 / measurement_noise
-                Omega.value[m+b][n+b] += -1.0 / measurement_noise
-                Xi.value[n+b][0]      += -measurement[i][1+b] / measurement_noise
-                Xi.value[m+b][0]      +=  measurement[i][1+b] / measurement_noise
+                Omega.value[n+b  ][n+b+2] += -1.0 / motion_noise
+                Omega.value[n+b+2][n+b  ] += -1.0 / motion_noise
+                Xi.value[n+b  ][0]        += -motion[b] / motion_noise
+                Xi.value[n+b+2][0]        +=  motion[b] / motion_noise
 
-        # update the information maxtrix/vector based on the robot motion
-        for b in range(4):
-            Omega.value[n+b][n+b] +=  1.0 / motion_noise
-        for b in range(2):
-            Omega.value[n+b  ][n+b+2] += -1.0 / motion_noise
-            Omega.value[n+b+2][n+b  ] += -1.0 / motion_noise
-            Xi.value[n+b  ][0]        += -motion[b] / motion_noise
-            Xi.value[n+b+2][0]        +=  motion[b] / motion_noise
-
-        print Omega.dimx
-        print Omega.dimy
+        # print Omega.dimx
+        # print Omega.dimy
         #initiate "take" step
         B = Omega.take([0,1],[0,1]) #extract B matrix
         A = Omega.take([0,1], range(2,Omega.dimx))
-        print "A.dimx:"
-        print A.dimy
+        # print "A.dimx:"
+        # print A.dimx
         Omega_prime = Omega.take(range(2, Omega.dimx), range(2, Omega.dimy))
         C = Xi.take([0,1],[0])
         Xi_2 = Xi.take(range(2,Xi.dimx), [0])
 
         Omega = Omega_prime - A.transpose()*B.inverse()*A
         Xi = Xi_2 - A.transpose()*B.inverse()*C
-        print "succeeded"
-        print "DimX:"
-        print Omega.dimx
-        print "DimY:"
-        print Omega.dimy
+        # print "succeeded"
+        # print "DimX:"
+        # print Omega.dimx
+        # print "DimY:"
+        # print Omega.dimy
+
+        del data[0] #nuke the data we poured through
+        # print "I deleted some data"
+        if len(data) == 0:
+            there_is_data = False
+            # print "Used up the data"
 
     # compute best estimate
+
     mu = Omega.inverse() * Xi
 
     return mu, Omega # make sure you return both of these matrices to be marked correct.
@@ -696,9 +728,9 @@ distance           = 20.0     # distance by which robot (intends to) move each i
 
 # Uncomment the following three lines to run the full slam routine.
 
-#data = make_data(N, num_landmarks, world_size, measurement_range, motion_noise, measurement_noise, distance)
-#result = slam(data, N, num_landmarks, motion_noise, measurement_noise)
-#print_result(N, num_landmarks, result)
+data = make_data(N, num_landmarks, world_size, measurement_range, motion_noise, measurement_noise, distance)
+result = slam(data, N, num_landmarks, motion_noise, measurement_noise)
+print_result(N, num_landmarks, result)
 
 # Uncomment the following three lines to run the online_slam routine.
 
@@ -807,7 +839,7 @@ answer_omega2      = matrix([[0.22871751620895048, 0.0, -0.11351536555795691, 0.
                              [-0.11351536555795691, 0.0, -0.46327947920510265, 0.0, 0.7867205207948973, 0.0],
                              [0.0, -0.11351536555795691, 0.0, -0.46327947920510265, 0.0, 0.7867205207948973]])
 
-#result = online_slam(testdata2, 6, 2, 3.0, 4.0)
-#solution_check(result, answer_mu2, answer_omega2)
+result = online_slam(testdata2, 6, 2, 3.0, 4.0)
+solution_check(result, answer_mu2, answer_omega2)
 
 
