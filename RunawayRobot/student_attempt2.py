@@ -91,6 +91,7 @@ def estimate_next_pos(measurement, OTHER = None):
             turning_angle = heading - OTHER['last_heading']
             print "turning angle"
             print turning_angle
+            last_heading = OTHER['last_heading']
             OTHER['last_heading'] = heading
             OTHER['last_measurement'] = measurement
 
@@ -105,20 +106,23 @@ def estimate_next_pos(measurement, OTHER = None):
 
             #estimation step
 
-            # X = matrix([[theta],
-            #             [X.value[1][0] + D * cos(theta)],
-            #             [X.value[2][0] + D * sin(theta)]])
+            #is it "last heading" or "theta"????
+            X = matrix([[last_heading],
+                        [X.value[1][0] + D * cos(theta)],
+                        [X.value[2][0] + D * sin(theta)]])
 
             F = matrix([[1, 0, 0],
                         [-D*sin(theta), 1, 0],
                         [D*cos(theta), 0, 1]])
 
             P = OTHER['P']
-            X = OTHER['X']
+            #X = OTHER['X']
 
 
             H = matrix([[0, 1, 0],
                         [0, 0, 1]])
+
+
 
 
             #Prediction
@@ -127,13 +131,16 @@ def estimate_next_pos(measurement, OTHER = None):
 
 
             #measurement update
-            Z = matrix([[measurement[0]],
-                        [measurement[1]]]) #truth
-
-            Y = Z - H*X
+            observations = matrix([[measurement[0]],
+                         [measurement[1]]]) #truth
+            Z = H*X
+            Y = observations - Z
+            print "this is Y"
+            print Y
             S = H * P * H.transpose() + R
             K = P * H.transpose() * S.inverse()
             X = X + (K*Y)
+            #X.value[0][0] = X.value[0][0]%(2*pi)
             P = (I - (K * H)) * P
 
 
