@@ -75,7 +75,7 @@ def estimate_next_pos(measurement, OTHER = None):
     if OTHER is not None:
         last_measurement = OTHER['last_measurement']
         heading = test_target.heading
-        #atan2(measurement[0] - last_measurement[0], measurement[1] - last_measurement[1])
+        #heading = atan2(measurement[0] - last_measurement[0], measurement[1] - last_measurement[1])
         #heading = heading%(2*pi)
         print "calculated heading"
         print heading
@@ -97,9 +97,18 @@ def estimate_next_pos(measurement, OTHER = None):
 
             #do some guessing
             D = distance_between(measurement, last_measurement)
-            theta = (heading+turning_angle)%(2*pi)
+            print "this is the D"
+            print D
+            theta = (heading+turning_angle)
             print "theta"
             print theta
+
+            #estimation step
+
+            # X = matrix([[theta],
+            #             [X.value[1][0] + D * cos(theta)],
+            #             [X.value[2][0] + D * sin(theta)]])
+
             F = matrix([[1, 0, 0],
                         [-D*sin(theta), 1, 0],
                         [D*cos(theta), 0, 1]])
@@ -111,25 +120,29 @@ def estimate_next_pos(measurement, OTHER = None):
             H = matrix([[0, 1, 0],
                         [0, 0, 1]])
 
-            #measurement update
-            z = H * X
-            Y = matrix([[measurement[0]],
-                         [measurement[1]]]) - z
-            S = H * P * H.transpose() + R
-            K = P * H.transpose() * S.inverse()
-            X = X + K*Y
-            P = (I - K * H) * P
 
             #Prediction
             X = (F * X) + u
             P = F * P * F.transpose() # + Q
 
-            OTHER['X'] = X
-            print X
-            OTHER['P'] = P
 
-            x_estimate = X.value[0][0]
-            y_estimate = X.value[1][0]
+            #measurement update
+            Z = matrix([[measurement[0]],
+                        [measurement[1]]]) #truth
+
+            Y = Z - H*X
+            S = H * P * H.transpose() + R
+            K = P * H.transpose() * S.inverse()
+            X = X + (K*Y)
+            P = (I - (K * H)) * P
+
+
+
+            OTHER['X'] = X
+
+            OTHER['P'] = P
+            x_estimate = X.value[1][0]
+            y_estimate = X.value[2][0]
             print type(x_estimate)
             xy_estimate = [x_estimate, y_estimate]
 
