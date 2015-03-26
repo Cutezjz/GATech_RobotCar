@@ -29,6 +29,8 @@
 from robot import *  # Check the robot.py tab to see how this works.
 from math import *
 from matrix import * # Check the matrix.py tab to see how this works.
+
+import time
 import random
 
 # This is the function you have to write. Note that measurement is a
@@ -50,6 +52,13 @@ import random
 #     return xy_estimate, OTHER
 
 def estimate_next_pos(measurement, OTHER = None):
+
+    # helper function to map all angles onto [-pi, pi]
+    def angle_truncate(a):
+        while a < 0.0:
+            a += pi * 2
+        return ((a + pi) % (pi * 2)) - pi
+
     print "true heading"
     print test_target.heading
     I = matrix([[1, 0, 0],
@@ -73,8 +82,12 @@ def estimate_next_pos(measurement, OTHER = None):
     heading = 0 #WILD ASS GUESS
 
     if OTHER is not None:
+        print "-----------------"
+        current_measurement = measurement
         last_measurement = OTHER['last_measurement']
-        heading = test_target.heading
+        heading = atan2(measurement[1] - last_measurement[1], measurement[0] - last_measurement[0])
+        #heading = angle_truncate(heading)
+        #heading = test_target.heading
         #heading = atan2(measurement[0] - last_measurement[0], measurement[1] - last_measurement[1])
         #heading = heading%(2*pi)
         print "calculated heading"
@@ -84,32 +97,48 @@ def estimate_next_pos(measurement, OTHER = None):
 
         if 'last_heading' not in OTHER:
             OTHER['last_heading'] = heading
-            xy_estimate = [0, 0]
+            xy_estimate = [X.value[1][0], X.value[2][0]]
             OTHER['last_measurement'] = measurement
         else:
-            print OTHER
+            print "OTHER is:", OTHER
             turning_angle = heading - OTHER['last_heading']
-            print "turning angle"
-            print turning_angle
-            last_heading = OTHER['last_heading']
-            OTHER['last_heading'] = heading
-            OTHER['last_measurement'] = measurement
+            print "turning angle:", turning_angle
+            print "turning angle actual:", test_target.turning
+            #last_heading = OTHER['last_heading']
 
 
             #do some guessing
             D = distance_between(measurement, last_measurement)
             print "this is the D"
             print D
-            theta = (heading+turning_angle)
-            print "theta"
-            print theta
+            theta = (heading+turning_angle)%(2*pi)
+            print "theta:", theta
+            print "theta - heading current:", theta - test_target.heading
 
             #estimation step
 
             #is it "last heading" or "theta"????
-            X = matrix([[last_heading],
-                        [X.value[1][0] + D * cos(theta)],
-                        [X.value[2][0] + D * sin(theta)]])
+            # X = matrix([[theta],
+            #             [X.value[1][0] + D * cos(theta)],
+            #             [X.value[2][0] + D * sin(theta)]])
+
+            delta_x = D * cos(theta)
+            delta_y = D * sin(theta)
+
+            nextX = measurement[0] + delta_x
+            nextY = measurement[1] + delta_y
+
+            # nextX = X.value[1][0] + delta_x
+            # nextY = X.value[2][0] + delta_y
+
+            #print "the distance to the next guessed point is:", distance_between([nextX,nextY], measurement)
+
+            X = matrix([[theta],
+                         [nextX],
+                         [nextY]])
+
+            print "I'm projecting X out to:", X
+            print "Note, the current robot stats:", test_target.heading, test_target.x, test_target.y
 
             F = matrix([[1, 0, 0],
                         [-D*sin(theta), 1, 0],
@@ -122,13 +151,11 @@ def estimate_next_pos(measurement, OTHER = None):
             H = matrix([[0, 1, 0],
                         [0, 0, 1]])
 
+            # #Prediction
+            # X = (F * X) + u
+            # P = F * P * F.transpose() # + Q
 
-
-
-            #Prediction
-            X = (F * X) + u
             P = F * P * F.transpose() # + Q
-
 
             #measurement update
             observations = matrix([[measurement[0]],
@@ -140,31 +167,36 @@ def estimate_next_pos(measurement, OTHER = None):
             S = H * P * H.transpose() + R
             K = P * H.transpose() * S.inverse()
             X = X + (K*Y)
-            #X.value[0][0] = X.value[0][0]%(2*pi)
+
             P = (I - (K * H)) * P
 
+            X.value[0][0] = angle_truncate(X.value[0][0])
 
 
             OTHER['X'] = X
 
             OTHER['P'] = P
-            x_estimate = X.value[1][0]
-            y_estimate = X.value[2][0]
-            print type(x_estimate)
+            x_estimate = OTHER['X'].value[1][0]
+            y_estimate = OTHER['X'].value[2][0]
+            print "Currently, the robot state is:", test_target.heading, observations
+            print "This is what Kalman thinks X will be:", OTHER['X']
             xy_estimate = [x_estimate, y_estimate]
+
+            OTHER['last_heading'] = heading
+            OTHER['last_measurement'] = measurement
 
 
     else:
         #x = theta, x, y
-        X = matrix([[1],
-                    [1],
-                    [1]])
+        X = matrix([[0.5],
+                    [2],
+                    [4]])
         #convariance matrix
         P = matrix([[1000, 0, 0],
                     [0, 1000, 0],
                     [0, 0, 1000]])
         OTHER = {'last_measurement': measurement, 'X': X, 'P': P}
-        xy_estimate = [0,0]
+        xy_estimate = [X.value[1][0], X.value[2][0]]
 
     return xy_estimate, OTHER
 
@@ -175,16 +207,20 @@ def distance_between(point1, point2):
     x2, y2 = point2
     return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
+
+
 # This is here to give you a sense for how we will be running and grading
 # your code. Note that the OTHER variable allows you to store any
 # information that you want.
 def demo_grading(estimate_next_pos_fcn, target_bot, OTHER = None):
     localized = False
     distance_tolerance = 0.01 * target_bot.distance
+    print "the distance tolerance is:" , distance_tolerance
     ctr = 0
     # if you haven't localized the target bot, make a guess about the next
     # position, then we move the bot and compare your guess to the true
     # next position. When you are close enough, we stop checking.
+    errorlist = []
     while not localized and ctr <= 1000:
         ctr += 1
         measurement = target_bot.sense()
@@ -192,6 +228,8 @@ def demo_grading(estimate_next_pos_fcn, target_bot, OTHER = None):
         target_bot.move_in_circle()
         true_position = (target_bot.x, target_bot.y)
         error = distance_between(position_guess, true_position)
+        errorlist.append(error)
+        print "the DELTA between minimum error and tolerance is:", distance_tolerance - min(errorlist)
         if error <= distance_tolerance:
             print "You got it right! It took you ", ctr, " steps to localize."
             localized = True
@@ -202,6 +240,7 @@ def demo_grading(estimate_next_pos_fcn, target_bot, OTHER = None):
 def demo_grading_visual(estimate_next_pos_fcn, target_bot, OTHER = None):
     localized = False
     distance_tolerance = 0.01 * target_bot.distance
+    print "the distance tolerance is:", distance_tolerance
     ctr = 0
     # if you haven't localized the target bot, make a guess about the next
     # position, then we move the bot and compare your guess to the true
@@ -230,17 +269,22 @@ def demo_grading_visual(estimate_next_pos_fcn, target_bot, OTHER = None):
     broken_robot.penup()
     measured_broken_robot.penup()
     #End of Visualization
+    errorlist = []
     while not localized and ctr <= 100:
         ctr += 1
         measurement = target_bot.sense()
         position_guess, OTHER = estimate_next_pos_fcn(measurement, OTHER)
+
         target_bot.move_in_circle()
         true_position = (target_bot.x, target_bot.y)
+        print "the position guess from my algorithm is:", position_guess
         error = distance_between(position_guess, true_position)
+        errorlist.append(error)
+        print "the error is:", error
         if error <= distance_tolerance:
             print "You got it right! It took you ", ctr, " steps to localize."
             localized = True
-        if ctr == 100:
+        if ctr == 300:
             print "Sorry, it took you too many steps to localize the target."
         #More Visualization
         measured_broken_robot.setheading(target_bot.heading*180/pi)
@@ -254,6 +298,10 @@ def demo_grading_visual(estimate_next_pos_fcn, target_bot, OTHER = None):
         prediction.stamp()
         #End of Visualization
         #turtle.getscreen()._root.mainloop()
+
+        #time.sleep()
+        print "the minimum error is so far:", min(errorlist)
+
     return localized
 
 # This is a demo for what a strategy could look like. This one isn't very good.
@@ -269,10 +317,10 @@ def naive_next_pos(measurement, OTHER = None):
 # This is how we create a target bot. Check the robot.py file to understand
 # How the robot class behaves.
 test_target = robot(2.1, 4.3, 0.5, 2*pi / 34.0, 1.5)
-measurement_noise = 0.01 #0.05 * test_target.distance
+measurement_noise = 0.05 * test_target.distance
 test_target.set_noise(0.0, 0.0, measurement_noise)
 
-demo_grading_visual(estimate_next_pos, test_target)
+demo_grading(estimate_next_pos, test_target)
 
 
 
